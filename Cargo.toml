@@ -12,3 +12,4 @@ serde_yaml = "0.8"
 chrono = { version = "0.4", features = ["serde"] }
 storaget = "0.8.0"
 dirs = "*"
+termion = "*"

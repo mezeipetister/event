@@ -2,11 +2,13 @@ extern crate chrono;
 extern crate dirs;
 extern crate serde;
 extern crate storaget;
+extern crate termion;
 
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::{env, io::Write};
 use storaget::*;
+use termion::{color, style};
 
 pub struct Error(String);
 impl std::fmt::Display for Error {
@@ -60,17 +62,28 @@ impl Event {
         }
     }
     pub fn print(&self) {
-        let mut today_sign = String::new();
+        let mut is_today: bool = false;
         let date = match self.try_date() {
             Ok(date) => {
                 if date == Utc::today().naive_local() {
-                    today_sign = "*** => ".to_string();
+                    is_today = true;
                 }
                 date.to_string()
             }
             Err(_) => "___NONE___".to_string(),
         };
-        println!("{}{}\t{} {}", today_sign, date, self.description, self.kind);
+        match is_today {
+            false => println!("{}\t{} {}", date, self.description, self.kind),
+            true => println!(
+                "{}{}{}\t{} {}{}",
+                color::Bg(color::White),
+                color::Fg(color::Red),
+                date,
+                self.description,
+                self.kind,
+                style::Reset
+            ),
+        }
     }
 }
 
