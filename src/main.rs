@@ -193,7 +193,9 @@ pub fn clean_str(text: &mut String) {
 
 fn main() -> PackResult<()> {
     let mut events: Pack<Vec<Event>> = Pack::load_or_init(
-        dirs::home_dir().expect("Error while getting your home folder"),
+        dirs::home_dir()
+            .expect("Error while getting your home folder")
+            .join(".eventdb"),
         ".event",
     )?;
     let mut events_ordered: Vec<&Event> = events.iter().collect();
